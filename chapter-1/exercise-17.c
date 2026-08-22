@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #define MAXLINE 1000
-#define THRESHOLD 6
+#define THRESHOLD 80
 
 int get_line(char line[], int max);
 
