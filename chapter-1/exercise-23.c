@@ -15,6 +15,7 @@ This material may be protected by copyright.
 #define OUT 1
 
 // This is a test comment.
+// RUN: ./exercise-23.c < exercise-23.c
 
 int get_str(char str[], int max);
 void remove_comments(char str[], char str_output[]);
@@ -48,9 +49,9 @@ int get_str(char str[], int max) {
 void remove_comments(char str[], char str_output[]) {
   char c;
   int i, j;
-  int is_quote = 0;
-  int is_block_comment = 0;
-  int is_line_comment = 0;
+  int is_quote = OUT;
+  int is_block_comment = OUT;
+  int is_line_comment = OUT;
 
   i = j = 0;
 
@@ -58,7 +59,7 @@ void remove_comments(char str[], char str_output[]) {
     c = str[i];
     if(!is_block_comment && !is_line_comment) {
       if(str[i] == '"') {
-        is_quote = is_quote == 0 ? 1 : 0;
+        is_quote = is_quote == OUT ? IN : OUT;
       }
     }
 
@@ -66,24 +67,24 @@ void remove_comments(char str[], char str_output[]) {
       if(!is_block_comment && !is_line_comment) {
         if(str[i] == '/') {
           if(str[i+1] == '*') {
-            is_block_comment = 1;
+            is_block_comment = IN;
           }
 
           if(str[i+1] == '/') {
-            is_line_comment = 1;
+            is_line_comment = IN;
           }
         }
       } 
 
       if(is_block_comment) {
         if(str[i] == '*' && str[i+1] == '/') {
-          is_block_comment = 0;
+          is_block_comment = OUT;
         }
       }
 
       if(is_line_comment) {
         if(str[i] == '\n') {
-          is_line_comment = 0;
+          is_line_comment = OUT;
         }
       }
     }
