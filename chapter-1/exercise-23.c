@@ -10,36 +10,88 @@ This material may be protected by copyright.
 */
 #include <stdio.h>
 
-#define FOLD_THRESHOLD 20
+#define MAX 1000
+#define IN  1
+#define OUT 1
+
+// This is a test comment.
+
+int get_str(char str[], int max);
+void remove_comments(char str[], char str_output[]);
 
 int main() {
-  char word[100];
-  int i, c, nc;
+  char str[MAX];
+  char str_output[MAX];
 
-  nc = 0;
-  for (i = 0; (c = getchar()) != EOF; i++) {
-    if(c == '\n' || c == '\t' || c == ' ') {
+  get_str(str, MAX);
 
-      if(i > FOLD_THRESHOLD) {
-        putchar('\n');
-        i = nc;
-      }
+  remove_comments(str, str_output);
 
-      if (nc > 0) {
-        printf("%s", word);
-        while(nc > 0) {
-          word[nc--] = 0;
-        }
-        putchar(c);
-      }
-    } else {
-      word[nc++] = c;
-    }
-  }
-
-  if(nc > 0) {
-    printf("%s", word);
-  }
+  printf("====== OUTPUT =======");
+  printf("%s", str_output);
 
   return 0;
+}
+
+int get_str(char str[], int max) {
+  int i, c;
+
+  for(i = 0; i < max-1 && (c = getchar()) != EOF; i++) {
+    str[i] = c;
+  }
+
+  str[i] = '\0';
+
+  return i;
+}
+
+void remove_comments(char str[], char str_output[]) {
+  char c;
+  int i, j;
+  int is_quote = 0;
+  int is_block_comment = 0;
+  int is_line_comment = 0;
+
+  i = j = 0;
+
+  while(str[i] != '\0') {
+    c = str[i];
+    if(!is_block_comment && !is_line_comment) {
+      if(str[i] == '"') {
+        is_quote = is_quote == 0 ? 1 : 0;
+      }
+    }
+
+    if(!is_quote) {
+      if(!is_block_comment && !is_line_comment) {
+        if(str[i] == '/') {
+          if(str[i+1] == '*') {
+            is_block_comment = 1;
+          }
+
+          if(str[i+1] == '/') {
+            is_line_comment = 1;
+          }
+        }
+      } 
+
+      if(is_block_comment) {
+        if(str[i] == '*' && str[i+1] == '/') {
+          is_block_comment = 0;
+        }
+      }
+
+      if(is_line_comment) {
+        if(str[i] == '\n') {
+          is_line_comment = 0;
+        }
+      }
+    }
+
+    if(!is_block_comment && !is_line_comment) {
+      str_output[j++] = str[i++];
+    } else {
+      i++;
+    }
+  }
 }
