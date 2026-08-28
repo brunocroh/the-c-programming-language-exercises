@@ -1,11 +1,10 @@
 #include <ctype.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 #define MAXLINE 100
 
 int htoi(char *s);
-int poww(int a, int b);
+int poww(int b, int x);
 int get_line(char *str, int max);
 
 int main() {
