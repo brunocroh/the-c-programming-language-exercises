@@ -1,11 +1,20 @@
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+#define MAXLINE 100
 
 int htoi(char *s);
 int poww(int a, int b);
+int get_line(char *str, int max);
 
 int main() {
-  printf("value: %d", htoi("0xaa"));
+  char str[MAXLINE];
+  int len;
+  while((len = get_line(str, MAXLINE)) != EOF) {
+    printf("value: %d\n", htoi(str));
+  }
+  return 0;
 }
 
 int htoi(char *s) {
@@ -30,15 +39,11 @@ int htoi(char *s) {
     if (isdigit(s[i])) {
       d = s[i] - '0';
     } else {
-      d = s[i]-'W';
+      d = s[i] - 'W';
     }
 
 
-    if(len > 0) {
-      res += d * poww(16, len);
-    } else {
-      res += d;
-    }
+    res += d * poww(16, len);
 
     len--;
     i++;
@@ -47,12 +52,24 @@ int htoi(char *s) {
   return res;
 }
 
-int poww(int a, int b) {
-  int r = a;
+int poww(int b, int x) {
+  int r = 1;
 
-  while (--b > 0) {
-    r = r * a;
+  while(x-- > 0) {
+    r *= b;
   }
 
-  return r ? r : 1;
+  return r;
+}
+
+int get_line(char str[], int max) {
+  int c, i;
+
+  i = 0;
+  while((c = getchar()) != EOF && c != '\n') {
+    str[i++] = c;
+  }
+
+  str[i] = '\0';
+  return i;
 }
