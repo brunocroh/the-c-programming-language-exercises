@@ -52,9 +52,6 @@ double atof(char s[]) {
   }
 
   return sign * val / power;
-
-
-  return (int) atof(s);
 }
 
 int get_line(char s[], int limit) {
