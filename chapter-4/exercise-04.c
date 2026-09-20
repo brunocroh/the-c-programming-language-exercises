@@ -1,6 +1,7 @@
 /*
- * Exercise 4-3. Given the basic framework, it's straightforward to extend the
- * calculator. Add the modulus (%) operator and provisions for negative numbers.
+ * Exercise 4-4. Add commands to print the top element of the stack without
+ * popping, to duplicate it, and to swap the top two elements. Add a command
+ * to clear the stack.
  *
  * From: "The C Programming Language, Second Edition"
  * by Brian W. Kernighan and Dennis M. Ritchie
@@ -25,6 +26,10 @@ void push(double);
 double pop(void);
 int getch(void);
 void ungetch(int);
+void peek();
+void duplicate();
+void swap();
+void clear();
 
 int main() {
   int type;
@@ -60,6 +65,18 @@ int main() {
         else
          printf("error: zero divisor=n");
         break;
+      case 'p':
+        peek();
+        break;
+      case 'd':
+        duplicate();
+        break;
+      case 's':
+        swap();
+        break;
+      case 'c':
+        clear();
+        break;
       case '\n':
         printf("\t%.8g\n", pop());
         break;
@@ -70,6 +87,26 @@ int main() {
   }
 
   return 0;
+}
+
+void peek() {
+  printf("\ntop: %.1f\n", val[sp]);
+}
+
+void duplicate() {
+  double top = val[sp-1];
+  val[sp++] = top;
+}
+
+void swap() {
+  double tmp = val[sp-1];
+  val[sp-1] = val[sp-2];
+  val[sp-2] = tmp;
+}
+
+void clear() {
+  sp = 0;
+  val[sp] = 0;
 }
 
 void push(double f) {
@@ -89,30 +126,55 @@ double pop(void) {
 }
 
 int getop(char s[]) {
-  int i, c;
+  int i, c, op;
   while((s[0] = c = getch()) == ' ' || c == '\t')
     ;
   s[1] = '\0';
-  if (!isdigit(c) && c != '.')
-    return c;
+
+  if (!isdigit(c) && c != '.') {
+    if(c != '-') {
+      return c;
+    } else {
+      op = c;
+    }
+
+  }
+
+  if(c == '-') {
+    if(isdigit(c = getch())) {
+      ungetch(c);
+    } else {
+      ungetch(c);
+      return op;
+    }
+  }
+
   i = 0;
-  if (isdigit(c))
-    while (isdigit(s[++i] = c = getch()))
+
+
+  if (isdigit(c)) {
+    while (isdigit(s[++i] = c = getch())) {
       ;
-  if (c == '.')
-    while (isdigit(s[++i] = c = getch()))
+    }
+  }
+
+  if (c == '.') {
+    while (isdigit(s[++i] = c = getch())) {
       ;
+    }
+  }
 
   s[i] = '\0';
-  if (c != EOF)
+
+  if (c != EOF) {
     ungetch(c);
+  }
   return NUMBER;
 }
 
 
 int getch(void) {
   return (bufp > 0) ? buf[--bufp] : getchar();
-
 }
 
 void ungetch(int c) {

@@ -1,10 +1,15 @@
+/*
+ * Exercise 4-2. Extend atof to handle scientific notation of the form
+ * 123.45e−6
+ *
+ * From: "The C Programming Language, Second Edition"
+ * by Brian W. Kernighan and Dennis M. Ritchie
+ */
 #include <_stdio.h>
 #include <ctype.h>
 #include <stdio.h>
 
 #define MAXSTR 100
-
-
 
 int main() {
   double sum, atof(char[]);
