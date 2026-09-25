@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <math.h>
+#include <string.h>
 
 #define MAXOP 100
 #define NUMBER '0'
@@ -97,15 +98,17 @@ int main() {
         break;
       case GETVAR:
         if(var_index > 0){
-          push(var_buff[var_index--]);
+          push(var_buff[--var_index]);
         }
         break;
       case SETVAR:
         var_buff[var_index++] = pop();
-        printf("var %c: %f\n", 'a' + var_index-1, var_buff[var_index - 1]);
+        printf("Var %c: %0.f\n", 'a' + var_index-1, var_buff[var_index - 1]);
         break;
       case '\n':
-        printf("\t%.8g\n", pop());
+        if(sp > 0) {
+          printf("\t%.8g\n", pop());
+        }
         break;
       default:
         printf("error: unknown command %s\n", s);
